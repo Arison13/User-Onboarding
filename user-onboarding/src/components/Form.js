@@ -1,15 +1,40 @@
-import React from 'react'
+import React, {useState} from 'react'
 
 
-export default function Form () {
+const initialFormValues = { username: "", email: "", password: "", ToS: false,}
+const initialUsers = []
 
+
+export default function Form (props) {
+ const [users, setUsers] = useState(initialUsers);
+ const [formValues, setFormValues] = useState(initialFormValues);
+
+ const change = evt => {
+     const {name, value} = evt.target;
+     setFormValues({...formValues, [name]: value});
+    }
+
+ const onSubmit = evt => {
+    evt.preventDefault()
+    const newUsers = {
+        username: formValues.username,
+        email: formValues.email,
+        password: formValues.password,
+        ToS: formValues.ToS
+    }
+    setUsers(users.concat(newUsers));
+    setFormValues(initialFormValues);
+
+  }
   return (
-    <form>  
-      <div> 
+    <div>
+     <form onSubmit={onSubmit}>   
         <label>Name
             <input
-                name='Username'
+                name='username'
                 type='text'
+                onChange={change}
+                value={formValues.username}
             />
         </label>
         
@@ -17,12 +42,16 @@ export default function Form () {
             <input
                 name='email'
                 type='text'
+                onChange={change}
+                value={formValues.email}
             />
         </label>
         <label>Password
             <input
                 name='password'
                 type='password'
+                onChange={change}
+                value={formValues.password}
             />
         </label>
         <label>Terms of Service
@@ -34,8 +63,19 @@ export default function Form () {
         <label>
             <input type="submit" name="submit" />
         </label>
-      </div>
-    </form>
+        
+        <div className='users'> 
+        <h2>Users</h2>
+        {users.map((user, idx) => (
+            <div key={idx}> 
+                <p> {user.username}:  email is {user.email} </p>
+            </div>
+        ))}
+     </div> 
+     </form>
+     
+    </div>
+   
     
     )
 }
